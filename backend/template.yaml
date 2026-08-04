@@ -11,15 +11,14 @@ Globals:
 Parameters:
   S3BucketName:
     Type: String
-    Default: weather-explorer-bucket
+    Default: weather-explorer-vs2026
     Description: Name of the S3 bucket for storing weather data
+  AllowedOrigins:
+    Type: String
+    Default: "https://frontend-six-theta-61.vercel.app,http://localhost:3000"
+    Description: Comma-separated CORS origins
 
 Resources:
-  WeatherBucket:
-    Type: AWS::S3::Bucket
-    Properties:
-      BucketName: !Ref S3BucketName
-
   WeatherApiFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -29,6 +28,7 @@ Resources:
         Variables:
           S3_BUCKET_NAME: !Ref S3BucketName
           AWS_REGION_NAME: !Ref AWS::Region
+          ALLOWED_ORIGINS: !Ref AllowedOrigins
       Policies:
         - S3CrudPolicy:
             BucketName: !Ref S3BucketName
@@ -43,6 +43,3 @@ Outputs:
   ApiUrl:
     Description: API Gateway endpoint URL
     Value: !Sub "https://${ServerlessHttpApi}.execute-api.${AWS::Region}.amazonaws.com"
-  BucketName:
-    Description: S3 Bucket name
-    Value: !Ref WeatherBucket

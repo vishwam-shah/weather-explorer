@@ -9,8 +9,13 @@ from botocore.exceptions import ClientError
 
 from app.config import AWS_REGION, S3_BUCKET_NAME
 
+IS_LAMBDA = "AWS_LAMBDA_FUNCTION_NAME" in os.environ
+
 
 def _get_s3_client():
+    if IS_LAMBDA:
+        return boto3.client("s3", region_name=AWS_REGION)
+
     for key in ("AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY", "AWS_SESSION_TOKEN"):
         os.environ.pop(key, None)
 

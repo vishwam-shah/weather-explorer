@@ -4,9 +4,12 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-os.environ.pop("AWS_ACCESS_KEY_ID", None)
-os.environ.pop("AWS_SECRET_ACCESS_KEY", None)
-os.environ.pop("AWS_SESSION_TOKEN", None)
+IS_LAMBDA = "AWS_LAMBDA_FUNCTION_NAME" in os.environ
+
+if not IS_LAMBDA:
+    os.environ.pop("AWS_ACCESS_KEY_ID", None)
+    os.environ.pop("AWS_SECRET_ACCESS_KEY", None)
+    os.environ.pop("AWS_SESSION_TOKEN", None)
 
 AWS_REGION = os.getenv("AWS_REGION", "us-east-1")
 S3_BUCKET_NAME = os.getenv("S3_BUCKET_NAME", "weather-explorer-bucket")
